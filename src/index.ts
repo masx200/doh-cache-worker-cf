@@ -1,5 +1,6 @@
 import { Strict_Transport_Security } from "./CloudflareMiddleWare";
-
+//@ts-ignore
+import welcome from "./welcome.html";
 export interface Env {
   DOH_ENDPOINT: string;
 }
@@ -22,6 +23,14 @@ async function fetchMiddleWare(
     ),
   );
   const url = new URL(request.url);
+  const nextUrl = new URL(request.url);
+  if (nextUrl.pathname === "/") {
+    return new Response(welcome, {
+      headers: {
+        "content-type": "text/html",
+      },
+    });
+  }
   if (url.pathname !== "/dns-query") {
     return new Response("not found", { status: 404 });
   }
