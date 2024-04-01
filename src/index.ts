@@ -70,18 +70,18 @@ export default {
  * @returns 返回一个Promise，该Promise解析为从原始服务器获取的响应。
  */
 
-async function handleGet(env: Env, url: URL, request: Request) {
+async function handleGet(env: Env, originurl: URL, request: Request) {
   const upurl = new URL(`${
     env.DOH_ENDPOINT ??
       "https://doh.pub/dns-query"
   }`);
-  upurl.search = url.search;
+  upurl.search = originurl.search;
   const headers = new Headers(request.headers);
   headers.append(
     "Forwarded",
-    `proto=${new URL(url).protocol.slice(0, -1)};host=${
-      new URL(url).hostname
-    };by=${url.host};for=${request.headers.get("cf-connecting-ip")}`,
+    `proto=${new URL(originurl).protocol.slice(0, -1)};host=${
+      new URL(originurl).hostname
+    };by=${originurl.host};for=${request.headers.get("cf-connecting-ip")}`,
   );
   const getRequest = new Request(upurl.href, {
     method: "GET",
