@@ -1,6 +1,6 @@
 import { Env } from "./Env";
 import { handleGet } from "./handleGet";
-import { handleRequest } from "./handleRequest";
+import { handleRequestPOST } from "./handleRequest";
 //@ts-ignore
 import welcome from "./welcome.html";
 /**
@@ -34,6 +34,23 @@ export async function fetchMiddleWare(
     );
     const url = new URL(request.url);
     const nextUrl = new URL(request.url);
+    const search = nextUrl.searchParams;
+    //content-type: application/dns-message
+
+    if (url.pathname == (env.DOH_PATHNAME ?? "/dns-query")) {
+        if (
+            request.method === "POST" &&
+            request.headers.get("content-type") ===
+                "application/dns-message"
+        ) {
+            return handleRequestPOST(request, env);
+        }
+        if (
+            request.method === "GET" &&
+            search.get("dns")
+        ) return handleGet(env, url, request);
+    }
+
     if (nextUrl.pathname === "/") {
         return new Response(welcome, {
             headers: {
@@ -41,11 +58,11 @@ export async function fetchMiddleWare(
             },
         });
     }
-    if (url.pathname !== "/dns-query") {
+    if (url.pathname !== (env.DOH_PATHNAME ?? "/dns-query")) {
         return new Response("not found", { status: 404 });
     }
     if (request.method === "POST") {
-        return handleRequest(request, env);
+        return handleRequestPOST(request, env);
     }
     if (request.method !== "GET") {
         return new Response("method not allowed", { status: 405 });

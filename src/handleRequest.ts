@@ -7,7 +7,7 @@ import { base64Encode } from "./base64Encode";
  * @param env 包含环境配置的对象，例如DOH_ENDPOINT（DNS over HTTPS 终端）的URL。
  * @returns 返回一个Promise，该Promise解析为从原始服务器获取的响应。
  */
-export async function handleRequest(request: Request, env: Env) {
+export async function handleRequestPOST(request: Request, env: Env) {
     // Base64 encode request body.
     const body = await request.arrayBuffer();
     if (body.byteLength === 0) {

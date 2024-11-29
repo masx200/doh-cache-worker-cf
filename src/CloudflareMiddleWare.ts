@@ -10,10 +10,10 @@
  * @returns 返回一个Promise，解析为一个Response对象，表示中间件处理的结果
  */
 export interface CloudflareMiddleWare<Env> {
-  (
-    request: Request,
-    env: Env,
-    ctx: ExecutionContext,
-    next: () => Promise<Response>,
-  ): Promise<Response>;
+    (
+        request: Request,
+        env: Env,
+        ctx: ExecutionContext,
+        next: () => Promise<Response>,
+    ): Promise<Response>;
 }
