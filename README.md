@@ -22,3 +22,5 @@ MIT License
 # 设置环境变量
 
 `DOH_ENDPOINT=https://doh.pub/dns-query`
+
+`DOH_PATHNAME=/dns-query`
