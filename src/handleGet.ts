@@ -1,4 +1,5 @@
 import { Env } from "./Env";
+import { get_doh_url } from "./fetchDnsResponse";
 import { fetchDnsResponseLoadBalance } from "./fetchDnsResponseLoadBalance";
 /**
  * Handles GET requests to the DNS resolver service.
@@ -12,7 +13,11 @@ import { fetchDnsResponseLoadBalance } from "./fetchDnsResponseLoadBalance";
  * @returns Returns the response from the DNS resolver service.
  */
 export async function handleGet(env: Env, originurl: URL, request: Request) {
-    const upurl = new URL(`${env.DOH_ENDPOINT ?? "https://doh.pub/dns-query"}`);
+    const dohs = get_doh_url(env); // get the doh url from the env
+
+    const upurl = new URL(
+        `${dohs.length ? dohs[Math.floor(Math.random() * dohs.length)] : "https://doh.pub/dns-query"}`,
+    );
     upurl.search = originurl.search;
     const headers = new Headers(request.headers);
     headers.append(
