@@ -17,10 +17,10 @@ export async function handleRequestPOST(request: Request, env: Env) {
     const encodedBody = base64Encode(body);
 
     // Create a request URL with encoded body as query parameter.
-    const url = new URL(`${env.DOH_ENDPOINT ?? "https://doh.pub/dns-query"}`);
-    url.searchParams.append("dns", encodedBody);
+    const upurl = new URL(`${env.DOH_ENDPOINT ?? "https://doh.pub/dns-query"}`);
+    upurl.searchParams.append("dns", encodedBody);
 
-    if (!url.href.startsWith("https://")) {
+    if (!upurl.href.startsWith("https://")) {
         throw Error(`The DOH_ENDPOINT must be a HTTPS URL.`);
     }
     const headers = new Headers(request.headers);
@@ -35,7 +35,7 @@ export async function handleRequestPOST(request: Request, env: Env) {
         }`,
     );
     // Create a GET request from the original POST request.
-    const getRequest = new Request(url.href, {
+    const getRequest = new Request(upurl.href, {
         method: "GET",
         body: null,
         headers: headers,

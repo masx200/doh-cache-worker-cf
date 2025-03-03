@@ -23,6 +23,9 @@ export async function handleGet(env: Env, originurl: URL, request: Request) {
             new URL(originurl).hostname
         };by=${originurl.host};for=${request.headers.get("cf-connecting-ip")}`,
     );
+    if (!upurl.href.startsWith("https://")) {
+        throw Error(`The DOH_ENDPOINT must be a HTTPS URL.`);
+    }
     const getRequest = new Request(upurl.href, {
         method: "GET",
         body: null,
