@@ -8,7 +8,7 @@
         "format": "prettier --write '**/*.{js,ts,css,json,md}'",
         "deploy": "wrangler deploy"
     },
-    "author": "milgradesec <38557680+milgradesec@users.noreply.github.com>",
+    "author": "masx200 <38557680+masx200@users.noreply.github.com>",
     "license": "MIT",
     "devDependencies": {
         "@cloudflare/workers-types": "^4.20231002.0",

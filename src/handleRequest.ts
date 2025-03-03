@@ -9,17 +9,15 @@ import { base64Encode } from "./base64Encode";
  */
 export async function handleRequestPOST(request: Request, env: Env) {
     // Base64 encode request body.
-    const body = await request.arrayBuffer();
+    //@ts-ignore
+    const body = new Uint8Array(await request.arrayBuffer());
     if (body.byteLength === 0) {
         return new Response("bad request", { status: 400 });
     }
     const encodedBody = base64Encode(body);
 
     // Create a request URL with encoded body as query parameter.
-    const url = new URL(`${
-        env.DOH_ENDPOINT ??
-            "https://doh.pub/dns-query"
-    }`);
+    const url = new URL(`${env.DOH_ENDPOINT ?? "https://doh.pub/dns-query"}`);
     url.searchParams.append("dns", encodedBody);
 
     if (!url.href.startsWith("https://")) {
@@ -31,7 +29,9 @@ export async function handleRequestPOST(request: Request, env: Env) {
         `proto=${new URL(request.url).protocol.slice(0, -1)};host=${
             new URL(request.url).hostname
         };by=${new URL(request.url).hostname};for=${
-            request.headers.get("cf-connecting-ip")
+            request.headers.get(
+                "cf-connecting-ip",
+            )
         }`,
     );
     // Create a GET request from the original POST request.
