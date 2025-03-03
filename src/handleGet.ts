@@ -1,4 +1,5 @@
 import { Env } from "./Env";
+import { fetchDnsResponseLoadBalance } from "./fetchDnsResponseLoadBalance";
 /**
  * Handles GET requests to the DNS resolver service.
  *
@@ -11,10 +12,7 @@ import { Env } from "./Env";
  * @returns Returns the response from the DNS resolver service.
  */
 export async function handleGet(env: Env, originurl: URL, request: Request) {
-    const upurl = new URL(`${
-        env.DOH_ENDPOINT ??
-            "https://doh.pub/dns-query"
-    }`);
+    const upurl = new URL(`${env.DOH_ENDPOINT ?? "https://doh.pub/dns-query"}`);
     upurl.search = originurl.search;
     const headers = new Headers(request.headers);
     headers.append(
@@ -26,28 +24,5 @@ export async function handleGet(env: Env, originurl: URL, request: Request) {
     if (!upurl.href.startsWith("https://")) {
         throw Error(`The DOH_ENDPOINT must be a HTTPS URL.`);
     }
-    const getRequest = new Request(upurl.href, {
-        method: "GET",
-        body: null,
-        headers: headers,
-    });
-    console.log(
-        JSON.stringify(
-            {
-                request: {
-                    method: getRequest.method,
-                    url: getRequest.url,
-                    Headers: Object.fromEntries(getRequest.headers),
-                },
-            },
-            null,
-            2,
-        ),
-    );
-    // Fetch response from origin server.
-    return await fetch(getRequest, {
-        cf: {
-            cacheEverything: true,
-        },
-    });
+    return fetchDnsResponseLoadBalance(env, upurl, headers);
 }

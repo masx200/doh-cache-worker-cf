@@ -1,5 +1,6 @@
 import { Env } from "./Env";
 import { base64Encode } from "./base64Encode";
+import { fetchDnsResponseLoadBalance } from "./fetchDnsResponseLoadBalance";
 
 /**
  * 处理DNS请求的函数。
@@ -35,28 +36,5 @@ export async function handleRequestPOST(request: Request, env: Env) {
         }`,
     );
     // Create a GET request from the original POST request.
-    const getRequest = new Request(upurl.href, {
-        method: "GET",
-        body: null,
-        headers: headers,
-    });
-    console.log(
-        JSON.stringify(
-            {
-                request: {
-                    method: getRequest.method,
-                    url: getRequest.url,
-                    Headers: Object.fromEntries(getRequest.headers),
-                },
-            },
-            null,
-            2,
-        ),
-    );
-    // Fetch response from origin server.
-    return await fetch(getRequest, {
-        cf: {
-            cacheEverything: true,
-        },
-    });
+    return fetchDnsResponseLoadBalance(env, upurl, headers);
 }
