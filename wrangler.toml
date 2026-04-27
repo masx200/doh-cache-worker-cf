@@ -5,5 +5,9 @@ send_metrics = false
 usage_model = "bundled"
 
 [vars]
-DOH_ENDPOINT = "https://doh.pub/dns-query"
-DOH_PATHNAME = "/dns-query"
+DOH_ENDPOINT = "[\"https://doh.opendns.com/dns-query\",\"https://dns.google/dns-query\",\"https://doh.pub/dns-query\",\"https://pngwczx94z.cloudflare-gateway.com/dns-query\"]"
+DOH_PATHNAME = "/"
+[observability]
+[observability.logs]
+enabled = true
+invocation_logs = true
