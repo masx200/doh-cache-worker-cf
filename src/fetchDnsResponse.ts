@@ -92,10 +92,7 @@ export async function fetchDnsResponse(
     return response;
 }
 export function get_doh_url(env: Env): string[] {
-    if (
-        env.DOH_ENDPOINT?.startsWith("[") &&
-        env.DOH_ENDPOINT?.endsWith("]")
-    ) {
+    if (env.DOH_ENDPOINT?.startsWith("[") && env.DOH_ENDPOINT?.endsWith("]")) {
         const dohs = JSON.parse(env.DOH_ENDPOINT ?? "");
 
         if (dohs.length) {
@@ -103,7 +100,6 @@ export function get_doh_url(env: Env): string[] {
         }
     }
     return [
-        new URL(env.DOH_ENDPOINT ?? "https://dns.alidns.com/dns-query")
-            .href,
+        new URL(env.DOH_ENDPOINT ?? "https://dns.alidns.com/dns-query").href,
     ];
 }

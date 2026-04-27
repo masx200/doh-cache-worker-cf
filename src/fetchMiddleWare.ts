@@ -40,15 +40,12 @@ export async function fetchMiddleWare(
     if (url.pathname == (env.DOH_PATHNAME ?? "/dns-query")) {
         if (
             request.method === "POST" &&
-            request.headers.get("content-type") ===
-                "application/dns-message"
+            request.headers.get("content-type") === "application/dns-message"
         ) {
             return handleRequestPOST(request, env, ctx);
         }
-        if (
-            request.method === "GET" &&
-            search.get("dns")
-        ) return handleGet(env, url, request, ctx);
+        if (request.method === "GET" && search.get("dns"))
+            return handleGet(env, url, request, ctx);
     }
 
     if (nextUrl.pathname === "/") {

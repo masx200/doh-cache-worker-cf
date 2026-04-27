@@ -15,8 +15,8 @@ export async function handleRequestPOST(
     env: Env,
     ctx?: ExecutionContext,
 ) {
-     const dohs = get_doh_url(env); // get the doh url from the env
-    
+    const dohs = get_doh_url(env); // get the doh url from the env
+
     // Base64 encode request body.
     //@ts-ignore
     const body = new Uint8Array(await request.arrayBuffer());
@@ -39,13 +39,10 @@ export async function handleRequestPOST(
         "Forwarded",
         `proto=${new URL(request.url).protocol.slice(0, -1)};host=${
             new URL(request.url).hostname
-        };by=${new URL(request.url).hostname};for=${
-            request.headers.get(
-                "cf-connecting-ip",
-            )
-        }`,
+        };by=${new URL(request.url).hostname};for=${request.headers.get(
+            "cf-connecting-ip",
+        )}`,
     );
     // Create a GET request from the original POST request.
     return fetchDnsResponseLoadBalance(env, upurl, headers, ctx);
 }
-

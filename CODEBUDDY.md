@@ -7,37 +7,48 @@
 ## 常用命令
 
 ### 部署
+
 ```bash
 pnpm run deploy
 # 或者
 npx wrangler deploy
 ```
+
 将 Worker 部署到 Cloudflare。需要事先通过 `wrangler login` 完成身份认证。
 
 ### 格式化代码
+
 ```bash
 pnpm run format
 ```
+
 使用 Prettier 格式化所有 `.js`、`.ts`、`.css`、`.json`、`.md` 文件。代码风格由 `deno.json` 定义：4 空格缩进，双引号。
 
 ### 本地开发调试
+
 ```bash
 npx wrangler dev
 ```
+
 启动本地开发服务器（基于 Miniflare），默认监听 `http://localhost:8787`。
 
 ### TypeScript 类型检查
+
 ```bash
 npx tsc --noEmit
 ```
+
 仅做类型检查，不产生编译产物（`noEmit: true`）。实际打包由 Wrangler 的内置 esbuild 完成。
 
 ### 环境变量配置（本地覆盖）
+
 在项目根目录创建 `.dev.vars` 文件：
+
 ```
 DOH_ENDPOINT=https://doh.pub/dns-query
 DOH_PATHNAME=/dns-query
 ```
+
 `wrangler dev` 会自动加载此文件，无需修改 `wrangler.toml`。
 
 ---
@@ -76,7 +87,7 @@ fetchMiddleWare            ← 路由层：按路径和方法分发请求
 项目使用了一个轻量的中间件接口 `CloudflareMiddleWare<Env>`，签名为：
 
 ```ts
-(request, env, ctx, next) => Promise<Response>
+(request, env, ctx, next) => Promise<Response>;
 ```
 
 目前只有一个中间件实现：`Strict_Transport_Security`，它调用 `next()` 获取内层响应后，将响应体读取为 `Uint8Array`（`bodyToBuffer`），再重新构造 `Response` 并附加 `Strict-Transport-Security: max-age=31536000` 头。**注意**：因为需要修改响应头，必须将流式 body 完整缓冲后才能重构响应，这是 `bodyToBuffer` 存在的原因。
@@ -86,8 +97,8 @@ fetchMiddleWare            ← 路由层：按路径和方法分发请求
 路由逻辑在 `fetchMiddleWare.ts` 中，核心判断：
 
 - 路径匹配 `DOH_PATHNAME`（默认 `/dns-query`）：
-  - `POST` + `Content-Type: application/dns-message` → `handleRequestPOST`
-  - `GET` + 含 `dns` 查询参数 → `handleGet`
+    - `POST` + `Content-Type: application/dns-message` → `handleRequestPOST`
+    - `GET` + 含 `dns` 查询参数 → `handleGet`
 - 路径为 `/` → 返回欢迎页 HTML（`welcome.html` 通过 Wrangler 的 `import` 特性作为文本导入）
 - 其他路径 → 404
 
@@ -108,8 +119,8 @@ fetchMiddleWare            ← 路由层：按路径和方法分发请求
 `fetchDnsResponseLoadBalance` 接受 `env`、目标 URL 和请求头：
 
 1. 调用 `get_doh_url(env)` 解析 `DOH_ENDPOINT`：
-   - 若为 JSON 数组字符串（如 `["https://a.com","https://b.com"]`），解析为多节点列表
-   - 否则作为单节点
+    - 若为 JSON 数组字符串（如 `["https://a.com","https://b.com"]`），解析为多节点列表
+    - 否则作为单节点
 2. 用 `ArrayShuffle`（Fisher-Yates 随机排序）打乱节点顺序
 3. 按顺序逐一尝试，调用 `fetchDnsResponse`（带 `cf.cacheEverything: true`）
 4. 校验响应必须为 `2xx` 且 `Content-Type: application/dns-message`，否则记录错误继续下一个节点
@@ -121,10 +132,10 @@ fetchMiddleWare            ← 路由层：按路径和方法分发请求
 
 ### 环境变量（Env 接口）
 
-| 变量 | 说明 | 示例 |
-|---|---|---|
-| `DOH_ENDPOINT` | 上游 DoH URL，支持单个字符串或 JSON 数组 | `"https://doh.pub/dns-query"` 或 `'["https://a.com","https://b.com"]'` |
-| `DOH_PATHNAME` | Worker 监听的 DNS 查询路径，默认 `/dns-query` | `/dns-query` |
+| 变量           | 说明                                          | 示例                                                                   |
+| -------------- | --------------------------------------------- | ---------------------------------------------------------------------- |
+| `DOH_ENDPOINT` | 上游 DoH URL，支持单个字符串或 JSON 数组      | `"https://doh.pub/dns-query"` 或 `'["https://a.com","https://b.com"]'` |
+| `DOH_PATHNAME` | Worker 监听的 DNS 查询路径，默认 `/dns-query` | `/dns-query`                                                           |
 
 生产配置在 `wrangler.toml` 的 `[vars]` 节定义；本地开发用 `.dev.vars` 覆盖。
 

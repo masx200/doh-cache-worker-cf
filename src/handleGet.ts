@@ -37,4 +37,3 @@ export async function handleGet(
     }
     return fetchDnsResponseLoadBalance(env, upurl, headers, ctx);
 }
-
