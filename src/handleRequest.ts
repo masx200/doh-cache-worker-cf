@@ -7,9 +7,14 @@ import { fetchDnsResponseLoadBalance } from "./fetchDnsResponseLoadBalance";
  * 处理DNS请求的函数。
  * @param request 原始的请求对象，需要是一个POST请求，其中包含未编码的DNS查询。
  * @param env 包含环境配置的对象，例如DOH_ENDPOINT（DNS over HTTPS 终端）的URL。
+ * @param ctx Worker 执行上下文，用于异步写缓存（可选）
  * @returns 返回一个Promise，该Promise解析为从原始服务器获取的响应。
  */
-export async function handleRequestPOST(request: Request, env: Env) {
+export async function handleRequestPOST(
+    request: Request,
+    env: Env,
+    ctx?: ExecutionContext,
+) {
      const dohs = get_doh_url(env); // get the doh url from the env
     
     // Base64 encode request body.
@@ -41,5 +46,6 @@ export async function handleRequestPOST(request: Request, env: Env) {
         }`,
     );
     // Create a GET request from the original POST request.
-    return fetchDnsResponseLoadBalance(env, upurl, headers);
+    return fetchDnsResponseLoadBalance(env, upurl, headers, ctx);
 }
+

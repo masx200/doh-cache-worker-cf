@@ -6,6 +6,7 @@ export async function fetchDnsResponseLoadBalance(
     env: Env,
     upurl: URL,
     headers: Headers,
+    ctx?: ExecutionContext,
 ) {
     const dohs = get_doh_url(env); // get the doh url from the env
 
@@ -13,7 +14,7 @@ export async function fetchDnsResponseLoadBalance(
     for (const doh of ArrayShuffle(dohs)) {
         const dohurl = new URL(doh);
         dohurl.search = upurl.search;
-        const response = await fetchDnsResponse(dohurl, headers);
+        const response = await fetchDnsResponse(dohurl, headers, ctx);
 
         if (
             response.ok &&
@@ -37,3 +38,4 @@ export async function fetchDnsResponseLoadBalance(
         },
     );
 }
+

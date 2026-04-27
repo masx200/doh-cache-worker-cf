@@ -10,9 +10,15 @@ import { fetchDnsResponseLoadBalance } from "./fetchDnsResponseLoadBalance";
  * @param env Environment variables, containing configuration information such as the DNS resolver endpoint.
  * @param originurl The URL of the original request, used to construct the request to the DNS resolver service.
  * @param request The original request object, containing headers and other information needed to construct the new request.
+ * @param ctx Worker 执行上下文，用于异步写缓存（可选）
  * @returns Returns the response from the DNS resolver service.
  */
-export async function handleGet(env: Env, originurl: URL, request: Request) {
+export async function handleGet(
+    env: Env,
+    originurl: URL,
+    request: Request,
+    ctx?: ExecutionContext,
+) {
     const dohs = get_doh_url(env); // get the doh url from the env
 
     const upurl = new URL(
@@ -29,5 +35,6 @@ export async function handleGet(env: Env, originurl: URL, request: Request) {
     if (!upurl.href.startsWith("https://")) {
         throw Error(`The DOH_ENDPOINT must be a HTTPS URL.`);
     }
-    return fetchDnsResponseLoadBalance(env, upurl, headers);
+    return fetchDnsResponseLoadBalance(env, upurl, headers, ctx);
 }
+

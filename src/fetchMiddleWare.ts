@@ -43,12 +43,12 @@ export async function fetchMiddleWare(
             request.headers.get("content-type") ===
                 "application/dns-message"
         ) {
-            return handleRequestPOST(request, env);
+            return handleRequestPOST(request, env, ctx);
         }
         if (
             request.method === "GET" &&
             search.get("dns")
-        ) return handleGet(env, url, request);
+        ) return handleGet(env, url, request, ctx);
     }
 
     if (nextUrl.pathname === "/") {
@@ -62,10 +62,10 @@ export async function fetchMiddleWare(
         return new Response("not found", { status: 404 });
     }
     if (request.method === "POST") {
-        return handleRequestPOST(request, env);
+        return handleRequestPOST(request, env, ctx);
     }
     if (request.method !== "GET") {
         return new Response("method not allowed", { status: 405 });
     }
-    return handleGet(env, url, request);
+    return handleGet(env, url, request, ctx);
 }
