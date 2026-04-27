@@ -1,42 +1,297 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Cloudflare Workers Playground</title>
-        <link
-            rel="stylesheet"
-            href="https://playground.devprod.cloudflare.dev/welcome-style.css"
-        />
-    </head>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>CDN Global - 下一代内容分发网络</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
 
-    <body>
-        <div class="flares">
-            <img src="https://playground.devprod.cloudflare.dev/flares.png" />
+        body {
+            background: #ffffff;
+            color: #111;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ===== 顶部导航 ===== */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            z-index: 1000;
+        }
+
+        header h1 {
+            font-size: 20px;
+            letter-spacing: 2px;
+        }
+
+        nav a {
+            margin-left: 30px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.6;
+        }
+
+        /* ===== Hero ===== */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero h2 {
+            font-size: 56px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            border: 1px solid #000;
+            padding: 12px 30px;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        /* ===== 通用section ===== */
+        section {
+            padding: 100px 60px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        h3 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .sub {
+            color: #666;
+            margin-bottom: 50px;
+        }
+
+        /* ===== 服务 ===== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .card {
+            border: 1px solid #eee;
+            padding: 30px;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #000;
+        }
+
+        /* ===== 数据展示 ===== */
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            flex: 1;
+            min-width: 200px;
+            margin: 20px 0;
+        }
+
+        .stat h4 {
+            font-size: 40px;
+        }
+
+        /* ===== 客户 ===== */
+        .clients {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .client {
+            border: 1px solid #eee;
+            padding: 20px;
+        }
+
+        /* ===== footer ===== */
+        footer {
+            padding: 60px;
+            border-top: 1px solid #eee;
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            header {
+                padding: 20px;
+            }
+
+            section {
+                padding: 80px 20px;
+            }
+
+            .hero h2 {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ===== 导航 ===== -->
+<header>
+    <h1>CDN GLOBAL</h1>
+    <nav>
+        <a href="#">产品</a>
+        <a href="#">解决方案</a>
+        <a href="#">价格</a>
+        <a href="#">文档</a>
+        <a href="#">登录</a>
+    </nav>
+</header>
+
+<!-- ===== 首页大屏 ===== -->
+<div class="hero">
+    <div>
+        <h2>全球加速 · 极致体验</h2>
+        <p>构建下一代 CDN 网络，让每一次访问都更快、更稳定、更安全</p>
+        <a class="btn" href="#">立即开始</a>
+    </div>
+</div>
+
+<!-- ===== 服务 ===== -->
+<section>
+    <h3>核心产品</h3>
+    <p class="sub">覆盖全球的高性能内容分发网络</p>
+
+    <div class="grid">
+        <div class="card">
+            <h4>静态加速</h4>
+            <p>全球节点缓存，毫秒级响应，提升网站访问速度。</p>
         </div>
-        <main>
-            <div class="workers-logo"></div>
-            <p>
-                Welcome! Use this Playground to test drive a Worker, create a
-                demo to share online, and when ready deploy directly to the edge
-                by setting up a Cloudflare account.
-            </p>
-            <h1>What is a Worker?</h1>
-            <p>
-                A Cloudflare Worker is JavaScript code you write that handles
-                your web site's HTTP traffic directly in Cloudflare's edge
-                locations around the world, allowing you to locate code close to
-                your end users in order to respond to them more quickly
-            </p>
-            <h1>Try it yourself</h1>
-            <p>
-                On your left is a sample Worker that is running on this site.
-                You can edit it live and see the results here. Edit the path
-                above to /api to see how the example Worker handles different
-                routes. You can also edit the code to see what's possible and
-                bring your next idea to life.
-            </p>
-        </main>
-    </body>
+        <div class="card">
+            <h4>动态加速</h4>
+            <p>智能路由优化，降低延迟，保障实时业务稳定。</p>
+        </div>
+        <div class="card">
+            <h4>DDoS 防护</h4>
+            <p>Tbps级防护能力，自动识别并清洗攻击流量。</p>
+        </div>
+        <div class="card">
+            <h4>边缘计算</h4>
+            <p>在全球边缘节点运行代码，提升响应速度与灵活性。</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 数据 ===== -->
+<section>
+    <h3>全球网络</h3>
+    <p class="sub">覆盖全球多个地区的高性能节点</p>
+
+    <div class="stats">
+        <div class="stat">
+            <h4>200+</h4>
+            <p>全球节点</p>
+        </div>
+        <div class="stat">
+            <h4>100Tbps</h4>
+            <p>带宽储备</p>
+        </div>
+        <div class="stat">
+            <h4>99.99%</h4>
+            <p>服务可用性</p>
+        </div>
+        <div class="stat">
+            <h4>5ms</h4>
+            <p>平均延迟</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 技术优势 ===== -->
+<section>
+    <h3>技术优势</h3>
+    <p class="sub">以技术驱动性能与安全</p>
+
+    <div class="grid">
+        <div class="card">
+            <h4>智能调度</h4>
+            <p>基于AI的流量调度系统，实现最优路径选择。</p>
+        </div>
+        <div class="card">
+            <h4>多层缓存</h4>
+            <p>分层缓存架构，提高命中率与访问速度。</p>
+        </div>
+        <div class="card">
+            <h4>安全体系</h4>
+            <p>WAF + Bot防护，全方位保障业务安全。</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 客户 ===== -->
+<section>
+    <h3>客户案例</h3>
+    <p class="sub">被全球企业信赖</p>
+
+    <div class="clients">
+        <div class="client">TechCorp</div>
+        <div class="client">MediaNet</div>
+        <div class="client">GameX</div>
+        <div class="client">ShopPlus</div>
+        <div class="client">CloudAI</div>
+        <div class="client">FinEdge</div>
+    </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer>
+    © 2026 CDN Global. All rights reserved.
+</footer>
+
+</body>
 </html>
