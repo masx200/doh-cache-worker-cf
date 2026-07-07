@@ -11,7 +11,7 @@
     "author": "masx200 <38557680+masx200@users.noreply.github.com>",
     "license": "MIT",
     "devDependencies": {
-        "@cloudflare/workers-types": "^4.20231002.0",
+        "@cloudflare/workers-types": "^5.20260707.1",
         "prettier": "^3.0.0",
         "typescript": "^5.2.2",
         "wrangler": "^4.62.0"
